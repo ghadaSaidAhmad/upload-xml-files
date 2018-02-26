@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+  <employee>
+    <name>ghada salama</name>
+    <job> web developer</job>
+ </employee>
+
+ <employee>
+   <name>eman salama</name>
+   <job> asp developer</job>
+</employee>
+
+<employee>
+  <name>basma salama</name>
+  <job> ios developer</job>
+</employee>
