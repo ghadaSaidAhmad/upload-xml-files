@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\uploadXmlRequest;
 use Illuminate\Support\Facades\Input;
 use App\Myfile;
+use App\MyRow;
 
 class MyFileController extends Controller
 {
@@ -22,15 +23,7 @@ class MyFileController extends Controller
       return view('index',compact('my_files'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -40,11 +33,8 @@ class MyFileController extends Controller
      */
     public function store(uploadXmlRequest $request)
     {
-
-
       if (Input::hasFile('attachment'))
       {
-
           $destination = storage_path($this->uploadDestination);
           $file_name = time() . '.xml';
           $request->file('attachment')->move($destination, $file_name);
@@ -69,11 +59,13 @@ class MyFileController extends Controller
 
           } catch (\Exception $e)
           {
-              return redirect()->back()->with('message', 'corrupted file,please select xml file  ');
+
+            Myfile::find($my_file->id)->delete();
+              return redirect()->back()->with('error', 'corrupted file,please select xml file  ');
           }
 
-          //redirect back
-          return redirect()->back()->with('message', 'file Saved Successfully');
+          //redirect back with success message
+          return redirect()->back()->with('message', 'file uploded Successfully');
 
         }
     }
@@ -87,35 +79,15 @@ class MyFileController extends Controller
     public function show($id)
     {
         $my_file=Myfile::find($id);
-        // dd($my_rows);
+
         return[
             'response'=> 1,
-           'data'=> view('filesTemplate.rows',compact('my_file'))->render()
+           'data'=> view('filesTemplate.myrows',compact('my_file','id'))->render()
         ] ;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+
 
     /**
      * Remove the specified resource from storage.
@@ -125,6 +97,91 @@ class MyFileController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Myfile::find($id)->delete();
     }
+
+    /**
+     * insert row the myrows resource.
+     *
+     * @param  int  $request
+     * @return \Illuminate\Http\Response
+     */
+
+     public function insertRow(Request $request)
+    {
+      $result=MyRow::create(['name'=>$request->name,'job'=>$request->job,'myfile_id'=>$request->myfile_id]);
+      if ($result) echo 'Data Inserted';
+    }
+
+    /**
+     * update row the myrows resource.
+     *
+     * @param  int  $request
+     * @return \Illuminate\Http\Response
+     */
+    public  function updateRow(Request $request)
+   {
+     $result=MyRow::where('id',$request->id)->update([$request->column_name=>$request->value]);
+     if ($result)  echo 'Data Updated';
+   }
+
+   /**
+    * delete row the myrows resource.
+    *
+    * @param  int  $request
+    * @return \Illuminate\Http\Response
+    */
+
+   public function deleteRow(Request $request)
+  {
+    $result=MyRow::where('id',$request->id)->delete();
+    if ($result)  echo 'Data Deleted';
+  }
+
+  /**
+   * get all rows
+   *
+   * @param  int  $request
+   * @return json
+   */
+  public function fetchRows(Request $request)
+  {
+
+      $query = MyRow::where('myfile_id',$request->file_id);
+      if(isset($_POST["search"]["value"]))
+      {
+       $query = $query->where('name','like','%'.$_POST["search"]["value"].'%');
+       $query = $query->where('job','like','%'.$_POST["search"]["value"].'%');
+
+      }
+
+      if(isset($_POST["order"]))
+      {
+        $query = $query->orderBy($columns[$_POST['order']['0']['column']]);
+
+      }
+
+      $result=$query->get();
+
+     $data = array();
+     foreach ($result as  $row)
+     {
+        $sub_array = array();
+       $sub_array[] = '<div contenteditable class="update" data-id="'.$row["id"].'" data-column="name">' . $row->name . '</div>';
+       $sub_array[] = '<div contenteditable class="update" data-id="'.$row["id"].'" data-column="job">' . $row->job. '</div>';
+       $sub_array[] = '<button type="button" name="delete" class="btn btn-danger btn-xs delete" id="'.$row["id"].'">Delete</button>';
+       $data[] = $sub_array;
+     }
+    $output = array(
+                     "draw"    => intval($_POST["draw"]),
+                     "recordsTotal"  =>  count($result),
+                     "recordsFiltered" => count($result),
+                     "data"    => $data
+                    );
+
+    echo json_encode($output);
+
+  }
+
+
 }

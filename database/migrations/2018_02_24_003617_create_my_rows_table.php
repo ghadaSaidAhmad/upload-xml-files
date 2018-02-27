@@ -15,9 +15,10 @@ class CreateMyRowsTable extends Migration
     {
         Schema::create('my_rows', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('my_files_id')->unsigned();
-            $table->foreign('my_files_id')->references('id')->on('my_files')->onDelete('cascade');
-            $table->text('content');
+            $table->integer('myfile_id')->unsigned();
+            $table->foreign('myfile_id')->references('id')->on('my_files')->onDelete('cascade');
+            $table->string('name');
+            $table->string('job');
             $table->timestamps();
         });
     }

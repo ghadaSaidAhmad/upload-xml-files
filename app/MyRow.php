@@ -12,4 +12,5 @@ class MyRow extends Model
     public function file() {
         return $this->belongsTo(MyFile::class);
     }
+    
 }

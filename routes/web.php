@@ -12,4 +12,10 @@
 */
 
 Route::get('/','MyFileController@index');
+Route::get('myfiles/{id}/delete','MyFileController@destroy');
+Route::post('/fetchRows','MyFileController@fetchRows');
+Route::post('/deleteRow','MyFileController@deleteRow');
+Route::post('/updateRow','MyFileController@updateRow');
+Route::post('/insertRow','MyFileController@insertRow');
+
 Route::resource('myfiles','MyFileController');

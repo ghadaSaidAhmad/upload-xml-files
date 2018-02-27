@@ -11,4 +11,6 @@ class Myfile extends Model
     public function rows() {
         return $this->hasMany(MyRow::class);
     }
+
+    
 }

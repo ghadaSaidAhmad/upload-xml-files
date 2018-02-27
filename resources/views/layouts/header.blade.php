@@ -24,7 +24,8 @@
     <link rel="stylesheet" href="/assets/plugins/alterfiy/alertify.bootstrap.css">
     <link rel="stylesheet" href="/assets/plugins/alterfiy/alertify.core.css">
     <link rel="stylesheet" href="/assets/plugins/alterfiy/alertify.default.css">
-
+      <link href="/assets/plugins/jquery-confirm/dist/jquery-confirm.min.css" rel="stylesheet" type="text/css" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
 
 

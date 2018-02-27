@@ -1,4 +1,5 @@
-</div><!-- ./wrapper -->
+</div>
+<!-- ./wrapper -->
 
 <!-- jQuery 2.1.4 -->
 <script src="/assets/plugins/jQuery/jQuery-2.1.4.min.js"></script>
@@ -8,11 +9,14 @@
 <script src="/assets/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="/assets/plugins/datatables/dataTables.bootstrap.min.js"></script>
 <script src="/assets/plugins/alterfiy/alertify.js"></script>
+<script src="/assets/plugins/jquery-confirm/dist/jquery-confirm.min.js"></script>
+
+
 <script src="/js/custom.js"></script>
 
 <!-- page script -->
 <script>
-  $(function () {
+  $(function() {
     // $("#example1").DataTable();
     $('#example2').DataTable({
       "paging": true,
@@ -25,4 +29,5 @@
   });
 </script>
 </body>
+
 </html>
